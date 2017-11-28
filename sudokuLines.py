@@ -5,9 +5,16 @@ Created on Sat Nov 25 15:34:57 2017
 @author: Twisha
 """
 
+
+
 import cv2
 import numpy as np
 from collections import defaultdict
+import project
+import os
+from io import BytesIO
+from pdfdocument.document import PDFDocument
+
 try:
     import Image
 except ImportError:
@@ -18,7 +25,7 @@ import os
 class Sudoku:
     @staticmethod
     def sudoku():
-        color_img = cv2.imread('question.jpg')
+        color_img = cv2.imread('question.png')
         img = cv2.cvtColor(color_img, cv2.COLOR_BGR2GRAY)
         imageCharacteristic = cv2.minMaxLoc(img)
         print imageCharacteristic[2]
@@ -105,10 +112,6 @@ class Sudoku:
                          IntersectionPoints[x[0]].append(x[1])
                          IntersectionList.append(x)
                          cv2.circle(color_img, tuple(x), 2,(255,0,0),2)
-
-        print((IntersectionPoints.keys))
-            
-        print(sorted(IntersectionList), len(IntersectionList))
         
         IntersectionList = sorted(IntersectionList)
         img = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY_INV, 101, 1)
@@ -121,15 +124,12 @@ class Sudoku:
                x2q=int(IntersectionList[j+i*10+11][0]-5)
                cv2.rectangle(color_img, (x1q, y1q), (x2q, y2q), (0,255,0), 2)
                f = f + 1
-               print f
                cv2.imwrite( str(f)+".jpg", img[y1q: y2q, x1q: x2q])
         #cv2.line(color_img,(x1,y1),(x2,y2),(0,255,0),2)
         #cv2.circle(color_img,(int(coList[0]), int(coList[1])), 63, (0,0,255), -1)
         
         cv2.imwrite('houghlines3.jpg',color_img)
         cv2.imwrite('houghlines4.jpg',img)
-
-        Sudoku.getNumberArray()
         
     @staticmethod    
     def substantialDistance(x, points):
@@ -158,7 +158,24 @@ class Sudoku:
             if string == '':
                 string = '0'
             input.append(string)
-        print(input)
+
+        sudoku = ''
+        for i in range(0,9):
+            for j in range(0,9):
+                sudoku = sudoku + input[i + (9*j)]
+        return sudoku;
+
+
+    @staticmethod
+    def solveSudoku():
+        Sudoku.sudoku()
+        grid = Sudoku.getNumberArray()
+        print grid
+        project.display(project.solve(grid))
+        print os.path.dirname(os.path.realpath(__file__))
+        for file in os.listdir(os.path.dirname(os.path.realpath(__file__))) :
+            if file.endswith('.jpg'):
+                os.remove(file)
 
 
 
@@ -188,8 +205,5 @@ class Sudoku:
     #         
     # cv2.imwrite('houghlines3.jpg',color_img)
     #==============================================================================
+Sudoku.solveSudoku()
 
-
-
-
-Sudoku.sudoku()
