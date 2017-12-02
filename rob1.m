@@ -17,6 +17,13 @@ joint.JointAxis = [0 0 1];
 body.Joint = joint;
 addBody(robot, body, 'link1');
 
+body = robotics.RigidBody('link3');
+joint = robotics.Joint('joint3','revolute');
+setFixedTransform(joint, trvec2tform([L2,0,0]));
+joint.JointAxis = [0 0 1];
+body.Joint = joint;
+addBody(robot, body, 'link2');
+
 body = robotics.RigidBody('tool');
 joint = robotics.Joint('fix1','fixed');
 setFixedTransform(joint, trvec2tform([L3, 0, 0]));
@@ -41,7 +48,7 @@ count = 20;
 
 q0 = homeConfiguration(robot);
 ndof = length(q0);
-
+qs = zeros(size(count,1), ndof);
 ik = robotics.InverseKinematics('RigidBodyTree', robot);
 weights = [0, 0, 0, 1, 1, 0];
 endEffector = 'tool';
@@ -53,14 +60,14 @@ for i = 1:count
     
     point = allpoints(i,:);
     qSol = ik(endEffector,trvec2tform(point),weights,qInitial);
-    
-    
+    % Store the configuration
+    qs(i,:) = qSol;
     % Start from prior solution
     qInitial = qSol;
 end
 
 figure
-show(robot);
+show(robot,qs(1,:)');
 view(2)
 ax = gca;
 ax.Projection = 'orthographic';
