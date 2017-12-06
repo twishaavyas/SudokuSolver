@@ -162,18 +162,7 @@ def draw(num,initial_x,initial_y):
         ninja.forward(10)
         ninja.penup()
 
-'''
-draw("1", -90, 90)
-draw("2", -70, 90)
-draw("3", -50, 90)
-draw("4", -30, 90)
-draw("5", -10, 90)
-draw("6", 10, 90)
-draw("7", 30, 90)
-draw("8", 50, 90)
-draw("9", 70, 90)
 
-'''
 j = 90
 index = 0
 
@@ -195,7 +184,6 @@ while j > -90:
 
 
 ninja.setposition(200,200)
-
 
 
 turtle.done()
