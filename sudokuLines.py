@@ -14,6 +14,7 @@ from collections import defaultdict
 import SudokuSolution
 import pytesseract
 import os
+import draw
 from PIL import Image
 
 
@@ -54,13 +55,13 @@ class Sudoku:
                             # Saving new line, 0 is horizontal line, 1 is vertical line
                             straightLines.append([rho, theta, 0])
                             cartesianLine.append((straightLines))
-                            # cv2.line(image,(x1,y1),(x2,y2),(0,255,0),2)
+                            cv2.line(image,(x1,y1),(x2,y2),(255,255,0),2)
                     else:
                         if (rho - pos_vert > 10):
                             pos_vert = rho
                             straightLines.append([rho, theta, 1])
                             cartesianLine.append(straightLines)
-                            # cv2.line(image,(x1,y1),(x2,y2),(0,0,255),2)
+                            cv2.line(image,(x1,y1),(x2,y2),(0,255,255),2)
 
             IntersectionPoints = defaultdict(list)
             IntersectionList = list()
@@ -86,7 +87,7 @@ class Sudoku:
                         elif (Sudoku.substantialDistance(x, IntersectionList)):
                             IntersectionPoints[x[0]].append(x[1])
                             IntersectionList.append(x)
-                            cv2.circle(image, tuple(x), 2, (255, 0, 0), 12)
+                            # cv2.circle(image, tuple(x), 2, (255, 0, 0), 12)
 
             IntersectionList = sorted(IntersectionList)
             # print len(IntersectionList)
@@ -135,9 +136,39 @@ class Sudoku:
         for i in range(0, 9):
             for j in range(0, 9):
                 sudoku = sudoku + input[i + (9 * j)]
-        # return sudoku
+        return sudoku
 
 
+
+    @staticmethod
+    def solveSudoku(image):
+        isSudokuProblem = Sudoku.sudoku(image)
+        if (isSudokuProblem):
+            nonMatrixGrid = Sudoku.getNumberArray()
+            grid = Sudoku.sudokuStringToQuestion(nonMatrixGrid)
+            if (len(grid) > 0):
+                # print nonMatrixGrid
+                SudokuSolution.solve(grid)
+                # print grid
+                grid_string = Sudoku.gridToString(grid)
+                # print grid_string
+            for file in os.listdir(os.path.dirname(os.path.realpath(__file__))):
+                if file.endswith('.jpg'):
+                    os.remove(file)
+            draw.draw(nonMatrixGrid, grid_string)
+
+
+
+    @staticmethod
+    def gridToString(grid):
+        grid_string = ''
+        for i in range(0, 9):
+            for j in range(0, 9):
+                grid_string = grid_string + str(grid[i][j])
+        return grid_string
+
+    @staticmethod
+    def sudokuStringToQuestion(sudoku):
         w, h = 9, 9;
         sudokuMatrix = [[0 for x in range(w)] for y in range(h)]
         index = 0
@@ -147,21 +178,6 @@ class Sudoku:
                 index = index + 1
         return sudokuMatrix
 
-
-    @staticmethod
-    def solveSudoku(image):
-        isSudokuProblem = Sudoku.sudoku(image)
-        # print isSudokuProblem
-        if (isSudokuProblem):
-            grid = Sudoku.getNumberArray()
-            # print grid
-            if (True):
-                # print 'in'
-                SudokuSolution.solve(grid)
-                print grid
-            for file in os.listdir(os.path.dirname(os.path.realpath(__file__))):
-                if file.endswith('.jpg'):
-                    os.remove(file)
 
     @staticmethod
     def preprocessImage(img):
