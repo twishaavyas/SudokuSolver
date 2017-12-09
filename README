@@ -6,8 +6,18 @@ For this program to work, you need to have:
 - Tkinter
 - Numpy
 - Image from PIL
+ -----------------------------------------------------------------------------------------
+You will also need to change the paths for Tesseract in SudokuLines.py as shown below:
 
+ pytesseract.pytesseract.tesseract_cmd = 'E:\\python\\Tesseract-OCR\\tesseract.exe'
+ tessdata_dir_config = '--tessdata-dir "E:\\python\\Lib\\site-packages\\pytesseract"'
+------------------------------------------------------------------------------------------
 Inorder to run the file,
 Run browseupload.py. A dialogue box to upload your image will pop up.
+
+------------------------------------------------------------------------------------------
+
+
+
 
 
