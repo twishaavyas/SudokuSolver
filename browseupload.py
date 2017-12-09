@@ -3,7 +3,6 @@ Created on Sat Nov 25 15:34:57 2017
 
 @author: Twisha
 """
-import tkinter
 from  tkinter import *
 from tkinter.filedialog import askopenfilename
 import sudokuLines

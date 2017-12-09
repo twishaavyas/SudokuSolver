@@ -26,43 +26,39 @@ class Sudoku:
         img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         detected_lines = Sudoku.preprocessImage(img)
+
         if detected_lines is not None and len(detected_lines) > 19:
             lines = detected_lines[0]
             cartesianLine = list()
             for lines in detected_lines:
                 line = sorted(lines, key=lambda line: line[0])
-                pos_hori = 0
-                pos_vert = 0
-                # Create a list to store new bundle of lines
+                pos_horizontal = 0
+                pos_vertical = 0
                 straightLines = []
-                # Store intersection points
                 for rho, theta in line:
 
-                    a = np.cos(theta)
-                    b = np.sin(theta)
-                    x0 = a * rho
-                    y0 = b * rho
-                    x1 = int(x0 + 1000 * (-b))
-                    y1 = int(y0 + 1000 * (a))
-                    x2 = int(x0 - 1000 * (-b))
-                    y2 = int(y0 - 1000 * (a))
+                    a0 = np.cos(theta)
+                    b0 = np.sin(theta)
+                    x0 = a0 * rho
+                    y0 = b0 * rho
+                    x1 = int(x0 + 1000 * (-b0))
+                    y1 = int(y0 + 1000 * (a0))
+                    x2 = int(x0 - 1000 * (-b0))
+                    y2 = int(y0 - 1000 * (a0))
 
-                    if (b > 0.5):
-                        # Check the position
-                        if (rho - pos_hori > 10):
-                            # Update the position
-                            pos_hori = rho
-                            # Saving new line, 0 is horizontal line, 1 is vertical line
+                    if (b0 > 0.5):
+                        if (rho - pos_horizontal > 10):
+                            pos_horizontal = rho
                             straightLines.append([rho, theta, 0])
                             cartesianLine.append((straightLines))
                             cv2.line(image,(x1,y1),(x2,y2),(0,0,255),2)
                     else:
-                        if (rho - pos_vert > 10):
-                            pos_vert = rho
+                        if (rho - pos_vertical > 10):
+                            pos_vertical = rho
                             straightLines.append([rho, theta, 1])
                             cartesianLine.append(straightLines)
                             cv2.line(image,(x1,y1),(x2,y2),(0,255,0),2)
-                    cv2.imwrite('houghlines9.png', image)
+                    cv2.imwrite('Line1.png', image)
 
             IntersectionPoints = defaultdict(list)
             IntersectionList = list()
@@ -89,7 +85,7 @@ class Sudoku:
                             IntersectionPoints[x[0]].append(x[1])
                             IntersectionList.append(x)
                             cv2.circle(image, tuple(x), 2, (255, 0, 0), 3)
-                        cv2.imwrite('houghlines7.png', image)
+                        cv2.imwrite('Lines2.png', image)
             IntersectionList = sorted(IntersectionList)
             # print len(IntersectionList)
             img = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 101, 1)
@@ -104,7 +100,7 @@ class Sudoku:
                         cv2.rectangle(image, (x1q, y1q), (x2q, y2q), (255, 255, 0), 2)
                         f = f + 1
                         cv2.imwrite(str(f) + ".jpg", img[y1q: y2q, x1q: x2q])
-                cv2.imwrite('houghlines3.png', image)
+                cv2.imwrite('Line6.png', image)
                 return True
         return False
 
