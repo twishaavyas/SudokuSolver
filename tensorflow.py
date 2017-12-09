@@ -5,8 +5,6 @@ except ImportError:
 import pytesseract
 import os
 
-
-
 pytesseract.pytesseract.tesseract_cmd = 'E:\\python\\Tesseract-OCR\\tesseract.exe'
 tessdata_dir_config = '--tessdata-dir "E:\\python\\python\\Lib\\site-packages\\pytesseract"'
 

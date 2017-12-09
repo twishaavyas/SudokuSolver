@@ -12,7 +12,7 @@ import turtle
 def draw(problem, solution):
 
     ninja = turtle.Turtle()
-    ninja.speed(1) #modify the speed
+    ninja.speed(10) #modify the speed
     ninja.pensize(2)
 
     # problem = "004300209005009001070060043006002087190007400050083000600000105003508690042910300"

@@ -55,13 +55,14 @@ class Sudoku:
                             # Saving new line, 0 is horizontal line, 1 is vertical line
                             straightLines.append([rho, theta, 0])
                             cartesianLine.append((straightLines))
-                            cv2.line(image,(x1,y1),(x2,y2),(255,255,0),2)
+                            cv2.line(image,(x1,y1),(x2,y2),(0,0,255),2)
                     else:
                         if (rho - pos_vert > 10):
                             pos_vert = rho
                             straightLines.append([rho, theta, 1])
                             cartesianLine.append(straightLines)
-                            cv2.line(image,(x1,y1),(x2,y2),(0,255,255),2)
+                            cv2.line(image,(x1,y1),(x2,y2),(0,255,0),2)
+                    cv2.imwrite('houghlines9.png', image)
 
             IntersectionPoints = defaultdict(list)
             IntersectionList = list()
@@ -87,8 +88,8 @@ class Sudoku:
                         elif (Sudoku.substantialDistance(x, IntersectionList)):
                             IntersectionPoints[x[0]].append(x[1])
                             IntersectionList.append(x)
-                            # cv2.circle(image, tuple(x), 2, (255, 0, 0), 12)
-
+                            cv2.circle(image, tuple(x), 2, (255, 0, 0), 3)
+                        cv2.imwrite('houghlines7.png', image)
             IntersectionList = sorted(IntersectionList)
             # print len(IntersectionList)
             img = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 101, 1)
@@ -103,7 +104,7 @@ class Sudoku:
                         cv2.rectangle(image, (x1q, y1q), (x2q, y2q), (255, 255, 0), 2)
                         f = f + 1
                         cv2.imwrite(str(f) + ".jpg", img[y1q: y2q, x1q: x2q])
-                cv2.imwrite('houghlines3.jpg', image)
+                cv2.imwrite('houghlines3.png', image)
                 return True
         return False
 
@@ -146,6 +147,7 @@ class Sudoku:
         if (isSudokuProblem):
             nonMatrixGrid = Sudoku.getNumberArray()
             grid = Sudoku.sudokuStringToQuestion(nonMatrixGrid)
+            grid_string = ''
             if (len(grid) > 0):
                 # print nonMatrixGrid
                 SudokuSolution.solve(grid)
@@ -169,12 +171,15 @@ class Sudoku:
 
     @staticmethod
     def sudokuStringToQuestion(sudoku):
-        w, h = 9, 9;
+        w, h = 9, 9
         sudokuMatrix = [[0 for x in range(w)] for y in range(h)]
         index = 0
         for i in range(0, 9):
             for j in range(0, 9):
-                sudokuMatrix[i][j] = int(sudoku[index])
+                if sudoku[index] == '|' or sudoku[index] == 'I' or sudoku[index] == 'T':
+                    sudokuMatrix[i][j] = 0
+                else:
+                    sudokuMatrix[i][j] = int(sudoku[index])
                 index = index + 1
         return sudokuMatrix
 
