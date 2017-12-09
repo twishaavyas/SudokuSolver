@@ -1,0 +1,13 @@
+For this program to work, you need to have:
+- Python 3.6
+- OpenCV
+- Tesseract
+- PyTessract(Python wrapper for Tesseract)
+- Tkinter
+- Numpy
+- Image from PIL
+
+Inorder to run the file,
+Run browseupload.py. A dialogue box to upload your image will pop up.
+
+
